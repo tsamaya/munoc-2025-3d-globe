@@ -10,8 +10,23 @@
     Popup,
     Projection,
   } from 'svelte-maplibre-gl';
+
   let hoveredFeature: maplibregl.MapGeoJSONFeature | undefined = $state.raw();
   let lnglat = $state.raw(new maplibregl.LngLat(0, 0));
+
+  let popupOpen = $state(false);
+  let offset = $state(24);
+  let offsets: maplibregl.Offset = $derived({
+    top: [0, offset],
+    bottom: [0, -offset],
+    left: [offset + 12, 0],
+    right: [-offset - 12, 0],
+    center: [0, 0],
+    'top-left': [offset, offset],
+    'top-right': [-offset, offset],
+    'bottom-left': [offset, -offset],
+    'bottom-right': [-offset, -offset],
+  });
 </script>
 
 <h1>MUNoC 2025</h1>
@@ -20,16 +35,14 @@
 </p>
 
 <MapLibre
-  class="h-[75vh] min-h-[300px]"
+  class="map h-[75vh] min-h-[300px]"
   style="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-  zoom={2}
-  center={{ lng: -100.486052, lat: 37.830348 }}
+  zoom={3}
+  center={{ lng: -0.486052, lat: 37.830348 }}
 >
   <GlobeControl />
   <Projection type="globe" />
-  <GeoJSONSource
-    data="https://maplibre.org/maplibre-gl-js/docs/assets/us_states.geojson"
-  >
+  <GeoJSONSource data="/world_countries.geojson">
     <FillLayer
       paint={{
         'fill-color': '#00ff55',
@@ -65,7 +78,7 @@
       <!-- Set the hover state on the source for the hovered feature -->
       <FeatureState id={hoveredFeature.id} state={{ hover: true }} />
       <Popup {lnglat} closeButton={false}
-        >{hoveredFeature.properties.STATE_NAME}</Popup
+        >{hoveredFeature.properties.name}</Popup
       >
     {/if}
   </GeoJSONSource>
