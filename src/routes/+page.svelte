@@ -14,19 +14,19 @@
   let hoveredFeature: maplibregl.MapGeoJSONFeature | undefined = $state.raw();
   let lnglat = $state.raw(new maplibregl.LngLat(0, 0));
 
-  let popupOpen = $state(false);
-  let offset = $state(24);
-  let offsets: maplibregl.Offset = $derived({
-    top: [0, offset],
-    bottom: [0, -offset],
-    left: [offset + 12, 0],
-    right: [-offset - 12, 0],
-    center: [0, 0],
-    'top-left': [offset, offset],
-    'top-right': [-offset, offset],
-    'bottom-left': [offset, -offset],
-    'bottom-right': [-offset, -offset],
-  });
+  // let popupOpen = $state(false);
+  // let offset = $state(24);
+  // let offsets: maplibregl.Offset = $derived({
+  //   top: [0, offset],
+  //   bottom: [0, -offset],
+  //   left: [offset + 12, 0],
+  //   right: [-offset - 12, 0],
+  //   center: [0, 0],
+  //   'top-left': [offset, offset],
+  //   'top-right': [-offset, offset],
+  //   'bottom-left': [offset, -offset],
+  //   'bottom-right': [-offset, -offset],
+  // });
 </script>
 
 <h1>MUNoC 2025</h1>
