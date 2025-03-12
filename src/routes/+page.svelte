@@ -42,6 +42,9 @@
 >
   <GlobeControl />
   <Projection type="globe" />
+  <!-- <GeoJSONSource
+    data="https://maplibre.org/maplibre-gl-js/docs/assets/us_states.geojson"
+  > -->
   <GeoJSONSource data="/world_countries.geojson">
     <FillLayer
       paint={{
@@ -76,7 +79,10 @@
     />
     {#if hoveredFeature}
       <!-- Set the hover state on the source for the hovered feature -->
-      <FeatureState id={hoveredFeature.id} state={{ hover: true }} />
+      <FeatureState
+        id={hoveredFeature.properties.adm0_a3}
+        state={{ hover: true }}
+      />
       <Popup {lnglat} closeButton={false}
         >{hoveredFeature.properties.name}</Popup
       >
