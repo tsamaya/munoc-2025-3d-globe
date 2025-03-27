@@ -29,11 +29,6 @@
   // });
 </script>
 
-<h1>MUNoC 2025</h1>
-<p>
-  Welcome to <a href="https://munoc.tela.org.uk/">MUNoC</a> 2025
-</p>
-
 <MapLibre
   class="map h-[75vh] min-h-[300px]"
   style="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
