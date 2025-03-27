@@ -32,7 +32,7 @@
 <MapLibre
   class="map h-[75vh] min-h-[300px]"
   style="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-  zoom={3}
+  zoom={2}
   center={{ lng: -0.486052, lat: 37.830348 }}
 >
   <GlobeControl />
