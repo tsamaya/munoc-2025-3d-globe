@@ -40,7 +40,7 @@
   <!-- <GeoJSONSource
     data="https://maplibre.org/maplibre-gl-js/docs/assets/us_states.geojson"
   > -->
-  <GeoJSONSource data="/world_countries.geojson">
+  <GeoJSONSource data="/munoc-2025.geojson">
     <FillLayer
       paint={{
         'fill-color': '#00ff55',
