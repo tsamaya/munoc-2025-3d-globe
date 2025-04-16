@@ -79,7 +79,7 @@
         state={{ hover: true }}
       />
       <Popup {lnglat} closeButton={false}
-        >{hoveredFeature.properties.name}</Popup
+        >{hoveredFeature.properties.NAME}</Popup
       >
     {/if}
   </GeoJSONSource>
