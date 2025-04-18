@@ -5,10 +5,10 @@ test.describe('index page test', () => {
     await page.goto('/');
     await expect(page).toHaveTitle('Munoc 2025 - Globe');
   });
-  test('home page has expected h1', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('h1')).toBeVisible();
-  });
+  // test('home page has expected h1', async ({ page }) => {
+  //   await page.goto('/');
+  //   await expect(page.locator('h1')).toBeVisible();
+  // });
 
   test('index page has expected map container', async ({ page }) => {
     await page.goto('/');

@@ -15,13 +15,13 @@
   let lnglat = $state.raw(new maplibregl.LngLat(0, 0));
 
   // Format GDP with proper suffix
-  function formatGDP(gdp: number): string {
-    if (gdp >= 1) {
-      return `${gdp.toFixed(2)} trillion USD`;
-    } else {
-      return `${(gdp * 1000).toFixed(2)} billion USD`;
-    }
-  }
+  // function formatGDP(gdp: number): string {
+  //   if (gdp >= 1) {
+  //     return `${gdp.toFixed(2)} trillion USD`;
+  //   } else {
+  //     return `${(gdp * 1000).toFixed(2)} billion USD`;
+  //   }
+  // }
   // Format population with commas
   function formatPopulation(pop: number): string {
     return pop.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
