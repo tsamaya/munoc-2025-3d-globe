@@ -7,6 +7,12 @@ Usage:
   node geojson-country-filter.js input.geojson output.geojson --countries "USA,Canada" --iso "FRA,DEU"
 ```
 
+example:
+
+```bash
+  node geojson-country-filter.js world_countries_10m.geojson ../static/munoc-2025.geojson --countries "United States of America,Russian Federation,People's republic of China,France,Islamic Republic of Pakistan,Republic of Hungary,Kingdom of Denmark,Hellenic Republic,Republic of Turkey,Democratic Republic of the Congo,Republic of Ecuador,Republic of Panama,Republic of India,State of Israel,Islamic Republic of Iran,Ukraine,Argentine Republic,Palestine"
+```
+
 # Features:
 
 - Filter by country names using the --countries flag

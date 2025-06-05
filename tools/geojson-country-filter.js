@@ -18,6 +18,7 @@ if (args.length < 2) {
   process.exit(1);
 }
 
+console.log('Arguments:', args);
 const inputFile = args[0];
 const outputFile = args[1];
 
@@ -62,7 +63,14 @@ const filteredFeatures = geojsonData.features.filter((feature) => {
   const properties = feature.properties;
 
   // Check for common property names in Natural Earth data
-  const nameFields = ['NAME', 'NAME_LONG', 'ADMIN', 'SOVEREIGNT', 'name'];
+  const nameFields = [
+    'NAME',
+    'NAME_LONG',
+    'ADMIN',
+    'SOVEREIGNT',
+    'FORMAL_EN',
+    'name',
+  ];
   const isoFields = ['ISO_A2', 'ISO_A3', 'ADM0_A3', 'iso_a2', 'iso_a3'];
 
   // Check if any country name matches
