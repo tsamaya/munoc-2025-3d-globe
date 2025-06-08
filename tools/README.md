@@ -10,7 +10,7 @@ Usage:
 example:
 
 ```bash
-  node geojson-country-filter.js world_countries_10m.geojson ../static/munoc-2025.geojson --countries "United States of America,Russian Federation,People's republic of China,France,Islamic Republic of Pakistan,Republic of Hungary,Kingdom of Denmark,Hellenic Republic,Republic of Turkey,Democratic Republic of the Congo,Republic of Ecuador,Republic of Panama,Republic of India,State of Israel,Islamic Republic of Iran,Ukraine,Argentine Republic,Palestine"
+  node geojson-country-filter.js world_countries_10m.geojson ../static/munoc-2025.geojson --countries "United States of America,Russian Federation,People's republic of China,France,Islamic Republic of Pakistan,Republic of Hungary,Kingdom of Denmark,Hellenic Republic,Republic of Turkey,Democratic Republic of the Congo,Republic of Ecuador,Republic of Panama,Republic of India,State of Israel,Islamic Republic of Iran,Ukraine,Argentine Republic,Palestine,Algeria,Belarus,Saudi Arabia,South Africa"
 ```
 
 # Features:

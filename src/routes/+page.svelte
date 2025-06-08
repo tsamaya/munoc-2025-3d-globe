@@ -28,9 +28,11 @@
   }
 </script>
 
+<!-- style="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json" -->
+
 <MapLibre
   class="map h-[75vh] min-h-[300px]"
-  style="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json"
+  style="https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json"
   zoom={2}
   center={{ lng: -0.486052, lat: 37.830348 }}
 >
@@ -42,7 +44,7 @@
   <GeoJSONSource data="/munoc-2025.geojson">
     <FillLayer
       paint={{
-        'fill-color': '#00ff55',
+        'fill-color': '#172F54',
         'fill-opacity': 0.6,
       }}
       onmousemove={(ev) => {
@@ -54,7 +56,7 @@
     />
     <LineLayer
       paint={{
-        'line-color': '#00ff55',
+        'line-color': '#172F54',
         'line-width': 2,
       }}
     />
@@ -68,13 +70,13 @@
         <div class="popup-container">
           <h2 class="country-name">{hoveredFeature.properties.NAME}</h2>
           <p class="official-name">{hoveredFeature.properties.FORMAL_EN}</p>
-          <div class="data-row">
+          <!-- <div class="data-row">
             <span class="label">Population:</span>
             <span class="value"
               >{formatPopulation(hoveredFeature.properties.POP_EST)} ({hoveredFeature
                 .properties.POP_YEAR})</span
             >
-          </div>
+          </div> -->
           <!-- <div class="data-row">
             <span class="label">GDP:</span>
             <span class="value"
