@@ -23,9 +23,9 @@
   //   }
   // }
   // Format population with commas
-  function formatPopulation(pop: number): string {
-    return pop.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
+  // function formatPopulation(pop: number): string {
+  //   return pop.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  // }
 </script>
 
 <!-- style="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json" -->
