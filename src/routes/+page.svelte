@@ -31,9 +31,9 @@
 <!-- style="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json" -->
 
 <MapLibre
-  class="map h-[75vh] min-h-[300px]"
+  class="map h-[100vh] min-h-[300px]"
   style="https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json"
-  zoom={2}
+  zoom={3}
   center={{ lng: -0.486052, lat: 37.830348 }}
 >
   <GlobeControl />
@@ -116,7 +116,7 @@
     margin: 0 0 12px 0;
   }
 
-  .data-row {
+  /* .data-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
@@ -124,7 +124,7 @@
 
   .data-row:last-child {
     margin-bottom: 0;
-  }
+  } 
 
   .label {
     color: #4a5568;
@@ -132,5 +132,5 @@
 
   .value {
     font-weight: 500;
-  }
+  }*/
 </style>
