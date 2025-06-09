@@ -1,44 +1,69 @@
 /**
- * GeoJSON Country Filter
+ * GeoJSON Country Filter with CSV Input
  *
  * This script filters a Natural Earth admin countries GeoJSON file
- * by country names or ISO codes.
+ * using a CSV file with country mappings and optional property replacements.
  *
- * Usage: node geojson-country-filter.js input.geojson output.geojson --countries "USA,Canada" --iso "FRA,DEU"
+ * CSV Format: SOVEREIGNT,NAME,FORMAL_EN (columns 2 and 3 can be empty)
+ *
+ * Usage: node geojson-country-filter.js input.geojson output.geojson countries.csv
  */
 
 import fs from 'fs';
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-if (args.length < 2) {
+if (args.length !== 3) {
   console.error(
-    'Usage: node geojson-country-filter.js input.geojson output.geojson [--countries "country1,country2..."] [--iso "ISO1,ISO2..."]',
+    'Usage: node geojson-country-filter.js input.geojson output.geojson countries.csv',
   );
   process.exit(1);
 }
 
-console.log('Arguments:', args);
 const inputFile = args[0];
 const outputFile = args[1];
+const csvFile = args[2];
 
-let countries = [];
-let isoCodes = [];
+// Simple CSV parser function
+function parseCSV(csvContent) {
+  const lines = csvContent.trim().split('\n');
+  const countries = [];
 
-// Parse optional arguments
-for (let i = 2; i < args.length; i += 2) {
-  if (args[i] === '--countries' && args[i + 1]) {
-    countries = args[i + 1].split(',').map((c) => c.trim().toLowerCase());
-  } else if (args[i] === '--iso' && args[i + 1]) {
-    isoCodes = args[i + 1].split(',').map((c) => c.trim().toUpperCase());
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+
+    // Simple CSV parsing - handles basic cases
+    const columns = line
+      .split(',')
+      .map((col) => col.trim().replace(/^["']|["']$/g, ''));
+
+    if (columns.length >= 1 && columns[0]) {
+      countries.push({
+        sovereignt: columns[0],
+        name: columns[1] || null,
+        formalEn: columns[2] || null,
+      });
+    }
   }
+
+  return countries;
 }
 
-// Check if any filter is provided
-if (countries.length === 0 && isoCodes.length === 0) {
-  console.error(
-    'Error: No filter criteria provided. Use --countries or --iso options.',
-  );
+// Read and parse the CSV file
+let countryMappings;
+try {
+  const csvContent = fs.readFileSync(csvFile, 'utf8');
+  countryMappings = parseCSV(csvContent);
+
+  if (countryMappings.length === 0) {
+    console.error('Error: No valid country mappings found in CSV file');
+    process.exit(1);
+  }
+
+  console.log(`Loaded ${countryMappings.length} country mappings from CSV`);
+} catch (error) {
+  console.error(`Error reading or parsing CSV file: ${error.message}`);
   process.exit(1);
 }
 
@@ -58,40 +83,57 @@ if (!geojsonData.type || !geojsonData.features) {
   process.exit(1);
 }
 
-// Filter the features based on country names or ISO codes
+// Create a map for quick lookup
+const countryMap = new Map();
+countryMappings.forEach((mapping) => {
+  countryMap.set(mapping.sovereignt.toLowerCase(), mapping);
+});
+
+// Filter and modify the features
 const filteredFeatures = geojsonData.features.filter((feature) => {
   const properties = feature.properties;
 
-  // Check for common property names in Natural Earth data
-  const nameFields = [
-    'NAME',
-    'NAME_LONG',
-    'ADMIN',
-    'SOVEREIGNT',
-    'FORMAL_EN',
-    'name',
-  ];
-  const isoFields = ['ISO_A2', 'ISO_A3', 'ADM0_A3', 'iso_a2', 'iso_a3'];
+  // Check if SOVEREIGNT or ADMIN matches any from our CSV
+  const sovereignt = properties.SOVEREIGNT;
+  const admin = properties.ADMIN;
 
-  // Check if any country name matches
-  const countryMatch =
-    countries.length > 0 &&
-    nameFields.some((field) => {
-      return (
-        properties[field] && countries.includes(properties[field].toLowerCase())
-      );
-    });
+  let mapping = null;
 
-  // Check if any ISO code matches
-  const isoMatch =
-    isoCodes.length > 0 &&
-    isoFields.some((field) => {
-      return (
-        properties[field] && isoCodes.includes(properties[field].toUpperCase())
-      );
-    });
+  // // Try to match on SOVEREIGNT first
+  // if (sovereignt) {
+  //   mapping = countryMap.get(sovereignt.toLowerCase());
+  // }
 
-  return countryMatch || isoMatch;
+  // // If no match on SOVEREIGNT, try ADMIN
+  // if (!mapping && admin) {
+  //   mapping = countryMap.get(admin.toLowerCase());
+  // }
+
+  // Try to match on ADMIN first
+  if (admin) {
+    mapping = countryMap.get(admin.toLowerCase());
+  }
+
+  // If no match on ADMIN, try SOVEREIGNT
+  if (!mapping && sovereignt) {
+    mapping = countryMap.get(sovereignt.toLowerCase());
+  }
+
+  // If no mapping found, exclude this feature
+  if (!mapping) return false;
+
+  // Create new properties object with only the four fields we want
+  const newProperties = {
+    SOVEREIGNT: sovereignt || '',
+    ADMIN: admin || '',
+    NAME: mapping.name || properties.NAME || '',
+    FORMAL_EN: mapping.formalEn || properties.FORMAL_EN || '',
+  };
+
+  // Replace the properties object
+  feature.properties = newProperties;
+
+  return true;
 });
 
 // Create the filtered GeoJSON object
@@ -107,6 +149,10 @@ try {
   console.log(
     `Selected ${filteredFeatures.length} countries out of ${geojsonData.features.length}`,
   );
+
+  // Show which countries were found
+  const foundCountries = filteredFeatures.map((f) => f.properties.SOVEREIGNT);
+  console.log('Found countries:', foundCountries.join(', '));
 } catch (error) {
   console.error(`Error writing output file: ${error.message}`);
   process.exit(1);
