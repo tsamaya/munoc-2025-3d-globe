@@ -68,7 +68,7 @@
       />
       <Popup {lnglat} closeButton={false}>
         <div class="popup-container">
-          <h2 class="country-name">{hoveredFeature.properties.NAME}</h2>
+          <h2 class="country-name">{hoveredFeature.properties.SOVEREIGNT}</h2>
           <p class="official-name">{hoveredFeature.properties.FORMAL_EN}</p>
           <!-- <div class="data-row">
             <span class="label">Population:</span>
