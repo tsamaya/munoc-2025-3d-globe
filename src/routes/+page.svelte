@@ -17,12 +17,12 @@
   let lnglat = $state.raw(new maplibregl.LngLat(0, 0));
 
   let isMobile = $state(false);
+
   // Detect if device is mobile/touch-enabled
   $effect(() => {
     isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   });
 
-  // Determine which feature to show based on device type
   // Determine which feature to show based on device type
   let displayedFeature = $derived(isMobile ? clickedFeature : hoveredFeature);
 </script>
@@ -60,10 +60,7 @@
           const feature = ev.features?.[0];
           if (feature) {
             // If clicking the same feature, hide popup
-            if (
-              clickedFeature?.properties?.adm0_a3 ===
-              feature.properties?.adm0_a3
-            ) {
+            if (clickedFeature?.properties?.id === feature.properties?.id) {
               clickedFeature = undefined;
             } else {
               clickedFeature = feature;
@@ -133,8 +130,8 @@
 
   .close-button {
     position: absolute;
-    top: 8px;
-    right: 12px;
+    top: 16px;
+    right: 16px;
     background: none;
     border: none;
     font-size: 1.5rem;
