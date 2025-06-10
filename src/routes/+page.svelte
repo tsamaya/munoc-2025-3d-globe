@@ -12,23 +12,20 @@
   } from 'svelte-maplibre-gl';
 
   let hoveredFeature: maplibregl.MapGeoJSONFeature | undefined = $state.raw();
+  let clickedFeature: maplibregl.MapGeoJSONFeature | undefined = $state.raw();
+
   let lnglat = $state.raw(new maplibregl.LngLat(0, 0));
 
-  // Format GDP with proper suffix
-  // function formatGDP(gdp: number): string {
-  //   if (gdp >= 1) {
-  //     return `${gdp.toFixed(2)} trillion USD`;
-  //   } else {
-  //     return `${(gdp * 1000).toFixed(2)} billion USD`;
-  //   }
-  // }
-  // Format population with commas
-  // function formatPopulation(pop: number): string {
-  //   return pop.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  // }
-</script>
+  let isMobile = $state(false);
+  // Detect if device is mobile/touch-enabled
+  $effect(() => {
+    isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  });
 
-<!-- style="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json" -->
+  // Determine which feature to show based on device type
+  // Determine which feature to show based on device type
+  let displayedFeature = $derived(isMobile ? clickedFeature : hoveredFeature);
+</script>
 
 <MapLibre
   class="map h-[100vh] min-h-[300px]"
@@ -38,9 +35,6 @@
 >
   <GlobeControl />
   <Projection type="globe" />
-  <!-- <GeoJSONSource
-    data="https://maplibre.org/maplibre-gl-js/docs/assets/us_states.geojson"
-  > -->
   <GeoJSONSource data="/munoc-2025.geojson">
     <FillLayer
       paint={{
@@ -49,10 +43,37 @@
       }}
       onmousemove={(ev) => {
         // Listen to mousemove events to track the hovered feature
-        hoveredFeature = ev.features?.[0];
-        lnglat = ev.lngLat; // cursor location
+        // Only handle hover on non-mobile devices
+        if (!isMobile) {
+          hoveredFeature = ev.features?.[0];
+          lnglat = ev.lngLat; // cursor location
+        }
       }}
-      onmouseleave={() => (hoveredFeature = undefined)}
+      onmouseleave={() => {
+        if (!isMobile) {
+          hoveredFeature = undefined;
+        }
+      }}
+      onclick={(ev) => {
+        // Handle click/tap for mobile devices
+        if (isMobile) {
+          const feature = ev.features?.[0];
+          if (feature) {
+            // If clicking the same feature, hide popup
+            if (
+              clickedFeature?.properties?.adm0_a3 ===
+              feature.properties?.adm0_a3
+            ) {
+              clickedFeature = undefined;
+            } else {
+              clickedFeature = feature;
+              lnglat = ev.lngLat;
+            }
+          } else {
+            clickedFeature = undefined;
+          }
+        }
+      }}
     />
     <LineLayer
       paint={{
@@ -60,30 +81,24 @@
         'line-width': 2,
       }}
     />
-    {#if hoveredFeature}
+    {#if displayedFeature}
       <!-- Set the hover state on the source for the hovered feature -->
       <FeatureState
-        id={hoveredFeature.properties.adm0_a3}
+        id={displayedFeature.properties.id}
         state={{ hover: true }}
       />
       <Popup {lnglat} closeButton={false}>
         <div class="popup-container">
-          <h2 class="country-name">{hoveredFeature.properties.NAME}</h2>
-          <p class="official-name">{hoveredFeature.properties.FORMAL_EN}</p>
-          <!-- <div class="data-row">
-            <span class="label">Population:</span>
-            <span class="value"
-              >{formatPopulation(hoveredFeature.properties.POP_EST)} ({hoveredFeature
-                .properties.POP_YEAR})</span
+          <h2 class="country-name">{displayedFeature.properties.NAME}</h2>
+          <p class="official-name">{displayedFeature.properties.FORMAL_EN}</p>
+          {#if isMobile}
+            <button
+              class="close-button"
+              onclick={() => (clickedFeature = undefined)}
             >
-          </div> -->
-          <!-- <div class="data-row">
-            <span class="label">GDP:</span>
-            <span class="value"
-              >{formatGDP(hoveredFeature.properties.GDP_MD)} ({hoveredFeature
-                .properties.GDP_YEAR})</span
-            >
-          </div> -->
+              ×
+            </button>
+          {/if}
         </div>
       </Popup>
     {/if}
@@ -116,21 +131,27 @@
     margin: 0 0 12px 0;
   }
 
-  /* .data-row {
+  .close-button {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #718096;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
   }
 
-  .data-row:last-child {
-    margin-bottom: 0;
-  } 
-
-  .label {
-    color: #4a5568;
+  .close-button:hover {
+    background-color: #f7fafc;
+    color: #2d3748;
   }
-
-  .value {
-    font-weight: 500;
-  }*/
 </style>

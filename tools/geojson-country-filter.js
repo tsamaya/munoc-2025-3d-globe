@@ -10,6 +10,7 @@
  */
 
 import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -124,6 +125,7 @@ const filteredFeatures = geojsonData.features.filter((feature) => {
 
   // Create new properties object with only the four fields we want
   const newProperties = {
+    id: feature.id || properties.id || uuidv4(), // Ensure each feature has a unique ID
     SOVEREIGNT: sovereignt || '',
     ADMIN: admin || '',
     NAME: mapping.name || properties.NAME || '',
