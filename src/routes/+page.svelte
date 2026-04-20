@@ -35,7 +35,8 @@
 >
   <GlobeControl />
   <Projection type="globe" />
-  <GeoJSONSource data="/munoc-2025.geojson">
+  <!-- <GeoJSONSource data="/munoc-2025.geojson"> -->
+  <GeoJSONSource data="/munoc-2026.geojson">
     <FillLayer
       paint={{
         'fill-color': '#172F54',
@@ -110,8 +111,9 @@
     padding: 16px;
     max-width: 300px;
     border: 1px solid #e2e8f0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-      Helvetica, Arial, sans-serif;
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+      sans-serif;
   }
 
   .country-name {
