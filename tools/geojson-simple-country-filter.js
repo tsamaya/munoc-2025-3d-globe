@@ -4,7 +4,7 @@
  * This script filters a Natural Earth admin countries GeoJSON file
  * by country names or ISO codes.
  *
- * Usage: node geojson-country-filter.js input.geojson output.geojson --countries "USA,Canada" --iso "FRA,DEU"
+ * Usage: node geojson-simple-country-filter.js input.geojson output.geojson --countries "USA,Canada" --iso "FRA,DEU"
  */
 
 import fs from 'fs';

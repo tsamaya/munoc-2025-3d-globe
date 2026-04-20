@@ -93,22 +93,18 @@ countryMappings.forEach((mapping) => {
 // Filter and modify the features
 const filteredFeatures = geojsonData.features.filter((feature) => {
   const properties = feature.properties;
+  // console.log(`Processing feature with properties: ${JSON.stringify(properties)}`);
 
   // Check if SOVEREIGNT or ADMIN matches any from our CSV
-  const sovereignt = properties.SOVEREIGNT;
-  const admin = properties.ADMIN;
+  const sovereignt = properties.SOVEREIGNT || properties.sovereignt;
+  const admin = properties.ADMIN || properties.admin;
 
+  if (!sovereignt && !admin) {
+    console.warn(`Warning: Feature with id "${feature.id}" has no SOVEREIGNT or ADMIN property, skipping.`);
+    return false;
+  }
+  // console.log(`Processing feature: SOVEREIGNT="${sovereignt}", ADMIN="${admin}"`);
   let mapping = null;
-
-  // // Try to match on SOVEREIGNT first
-  // if (sovereignt) {
-  //   mapping = countryMap.get(sovereignt.toLowerCase());
-  // }
-
-  // // If no match on SOVEREIGNT, try ADMIN
-  // if (!mapping && admin) {
-  //   mapping = countryMap.get(admin.toLowerCase());
-  // }
 
   // Try to match on ADMIN first
   if (admin) {
